@@ -1,0 +1,191 @@
+<button (click)="goBack()">go to dashboard</button>
+
+<div class="container mt-5">
+  <h2 class="mb-4">{{ editUserId ? "Update" : "Add" }} User</h2>
+
+  <ng-template #userDontExistsTemp>
+    <div>User Doesn't Exists.</div>
+  </ng-template>
+  <form
+    *ngIf="userExists; else userDontExistsTemp"
+    [formGroup]="userForm"
+    (ngSubmit)="onSubmit()"
+  >
+    <div class="mb-3 form-group">
+      <label for="username" class="form-label">Name</label>
+      <input
+        type="text"
+        formControlName="name"
+        class="form-control"
+        id="username"
+      />
+      <div
+        *ngIf="userForm.get('name')?.hasError('required')"
+        class="text-danger"
+      >
+        Name is required.
+      </div>
+    </div>
+
+    <div class="mb-3 form-group">
+      <label for="inputEmail">Email</label>
+      <input
+        type="email"
+        formControlName="email"
+        class="form-control"
+        id="inputEmail"
+        placeholder="Email"
+      />
+      <div
+        *ngIf="userForm.get('email')?.hasError('required')"
+        class="text-danger"
+      >
+        Email is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label" for="typeNumber">Mobile Number</label>
+      <input
+        type="number"
+        formControlName="number"
+        id="typeNumber"
+        class="form-control"
+      />
+      <div
+        *ngIf="userForm.get('number')?.hasError('required')"
+        class="text-danger"
+      >
+        Number is required.
+      </div>
+    </div>
+    <!--Gender -->
+
+    <div *ngFor="let data of genderData" class="form-check form-check-inline">
+      <input
+        class="form-check-input"
+        formControlName="gender"
+        [value]="data"
+        type="radio"
+      />
+      <label class="form-check-label">{{ data }}</label>
+    </div>
+    <div
+      *ngIf="userForm.get('gender')?.hasError('required')"
+      class="text-danger"
+    >
+      Gender is required.
+    </div>
+
+    <!-- Role -->
+    <div class="form-group">
+      <label for="validationDefault07" class="form-label">Role</label>
+      <select
+        class="form-select"
+        formControlName="role"
+        id="validationDefault07"
+      >
+        <option *ngFor="let role of roleData" [value]="role">
+          {{ role }}
+        </option>
+      </select>
+      <div
+        *ngIf="userForm.get('role')?.hasError('required')"
+        class="text-danger"
+      >
+        Role is required.
+      </div>
+    </div>
+    <!-- Address -->
+    <div formArrayName="address" class="mb-3">
+      <label for="address" class="form-label">Address</label>
+
+      <div
+        *ngFor="let addressGroup of _address.controls; let i = index"
+        class="form-group"
+        [formGroupName]="i"
+      >
+        <div class="col-md-6">
+          <label for="validationDefault08" class="form-label">Street</label>
+          <input
+            type="text"
+            formControlName="street"
+            class="form-control"
+            id="validationDefault08"
+          />
+          <div
+            *ngIf="addressGroup.get('street')?.hasError('required')"
+            class="text-danger"
+          >
+            Street is required.
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="validationDefault03" class="form-label">City</label>
+          <input
+            type="text"
+            formControlName="city"
+            class="form-control"
+            id="validationDefault03"
+          />
+          <div
+            *ngIf="addressGroup.get('city')?.hasError('required')"
+            class="text-danger"
+          >
+            City is required.
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="validationDefault04" class="form-label">State</label>
+          <select
+            class="form-select"
+            formControlName="state"
+            id="validationDefault04"
+          >
+            <option *ngFor="let state of stateData" [value]="state.id">
+              {{ state.title }}
+            </option>
+          </select>
+          <div
+            *ngIf="addressGroup.get('state')?.hasError('required')"
+            class="text-danger"
+          >
+            State is required.
+          </div>
+        </div>
+        <div class="col-md-3">
+          <label for="validationDefault05" class="form-label">Zip</label>
+          <input
+            type="text"
+            formControlName="zip"
+            class="form-control"
+            id="validationDefault05"
+          />
+          <div
+            *ngIf="addressGroup.get('zip')?.hasError('required')"
+            class="text-danger"
+          >
+            Zip is required.
+          </div>
+        </div>
+        <button
+          *ngIf="!(i == 0 && addressRequired)"
+          type="button"
+          (click)="removeAddress(i)"
+          class="btn btn-danger"
+        >
+          Remove
+        </button>
+      </div>
+
+      <button type="button" (click)="addAddress()" class="btn btn-success">
+        Add
+      </button>
+    </div>
+
+    <!-- Button to publish the movie and publish reviews -->
+    <button type="submit" class="btn btn-primary">
+      {{ editUserId ? "Update" : "Add" }} User
+    </button>
+  </form>
+</div>
